@@ -1,0 +1,56 @@
+.header {
+	position: relative;
+}
+.header > .center {
+	width: 260px;
+	margin: 0 auto;
+	padding: 20px 0px;
+	text-align: center;
+}
+.header > .center > .title {
+	font-size: 18px;
+	font-weight: bold;
+	margin-left: -10px;
+}
+.header > .toolbar {
+	position: absolute;
+	right: 0px;
+	top: 115px;
+}
+
+.header > .center > .slider-scale {
+	margin-top: -9px;
+	font-size: 10px;
+	color: #a9a9a9;
+}
+.header > .center > .slider-scale > span {
+	margin-right: 9px;
+}
+
+#summary_calender .task {
+	position: relative;
+}
+#summary_calender .task .num {
+	position: absolute;
+	right: 8px;
+}
+
+/* JUI Components */
+.jui .slider.horizontal .track {
+	height: 3px;
+}
+.jui .slider .track .handle {
+	width: 9px;
+	height: 9px;
+}
+.jui .slider.horizontal .track .handle {
+	margin-top: -6px;
+}
+.jui .calendar>table.body td.active {
+	background-color: transparent;
+}
+.jui .table.simple.footer>thead th {
+	border-top-width: 0px !important;
+	border-bottom-width: 0px !important;
+	text-align: right !important;
+}

@@ -1,0 +1,151 @@
+<html>
+<head>
+<META charset="UTF-8">
+<meta name="viewport" content="initial-scale=1, maximum-scale=1">
+
+<script type="text/javascript" src="static/lib/jquery-1.8.0.min.js" ></script>
+<script type="text/javascript" src="static/lib/jui/js/core.min.js" ></script>
+<script type="text/javascript" src="static/lib/fancybox/jquery.fancybox-1.3.4.pack.js"></script>
+<link rel="stylesheet" type="text/css" href="static/lib/fancybox/jquery.fancybox-1.3.4.css" media="screen" />
+<link rel="stylesheet" href="static/index.css" />
+
+<script>
+   
+	var _ = jui.include("util.base");
+
+	$(function() {
+
+         
+		$(".summary-box:not(.back)").on("mouseover", function(e) {
+			if($(e.target).hasClass("btn")) return;
+
+			var index = $(this).data("index"),
+				$target = $(".back[data-index=" + index + "]");
+
+			$(this).hide();
+			$target.show().addClass("flipInY animated");
+
+			setTimeout(function() {
+				$target.removeClass("flipInY animated");
+			}, 1000);
+
+			$(".summary-box").each(function(i) {
+				var targetIndex = $(this).data("index");
+
+				if(index != targetIndex) {
+					if($(this).hasClass("back")) {
+						$(this).hide();
+					} else {
+						$(this).show();
+					}
+				}
+			});
+
+            $(".detail_link").fancybox({
+				'width'		    	: '90%',
+				'height'			: '90%',
+				'autoScale'			: true,
+				'transitionIn'		: 'elastic',
+				'transitionOut'		: 'elastic',
+				'type'				: 'iframe'
+			});
+
+		});
+	});
+</script>
+</head>
+<body>
+    <div class="homecontent" id="homecontent">
+        <div id="logo">
+            모두의리콜
+        </div>
+        <div id="header">
+            <p>모두의리콜<a href="" target="_blank"></a></p></div>
+        <center>
+            <div class="text">
+                <h1><br>모두의리콜<br>
+                    리콜 블록체인 웹플랫폼</h1>
+                <h2>리콜에 대한 모든 처리를 한번에 끝내기</h2>
+            </div>
+            <div class="item">
+                <div class="summary">
+                    <div class="summary-box" data-index="0" style="left: 0px;">
+                        <div class="summary-normal">
+                            <div class="imagesfield"><img alt="소비자" src="static/images/thumb1.png"></div>
+                            <div class="summary-info">
+                                <div class="title">소비자</div>
+                                <div class="content">리콜봇을 통해서 리콜신청하기 및 평가하기</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="summary-box back" data-index="0"  style="left: 0px;">
+                        <div class="summary-hover" style="background-color:#814fd5">
+                            <div class="info">Item 1</div>
+                            <div class="title">소비자</div>
+                            <div class="content">
+                                - 리콜봇을 통해 리콜신청하기<br/>
+                                - 리콜봇을 통해 공급자 평가하기 <br/>
+                            </div>
+                            <a href="https://recall.run.goorm.io/index" class="btn btn-default detail_link">READ MORE</a>
+                        </div>
+                    </div>
+                    <div class="summary-box" data-index="1" style="left: 258px;">
+                        <div class="summary-normal">
+                            <div class="imagesfield"><img alt="공급자 썸네일" src="static/images/thumb2.png" ></div>
+                            <div class="summary-info">
+                                <div class="title">공급자</div>
+                                <div class="content">블록체인을 활용해 리콜 접수/이력 입력하기
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="summary-box back" data-index="1" style="left: 258px;">
+                        <div class="summary-hover2" style="background-color:#ffcb2b">
+                            <div class="info">Item 2</div>
+                            <div class="title">공급자</div>
+                            <div class="content">
+                                - 리콜 접수하기<br/>
+                                - 리콜 이력 입력하기
+                            </div>
+                            <a href="https://recall.run.goorm.io/producer" class="btn btn-default detail_link">READ MORE</a>
+                        </div>
+                    </div>
+                   <div class="summary-box" data-index="2" style="left: 516px;">
+                       <div class="summary-normal">
+                            <div class="imagesfield"><img alt="감독기관 썸네일" src="static/images/thumb3.png" ></div>
+                           <div class="summary-info">
+                               <div class="title">감독기관</div>
+                               <div class="content">
+                                블록체인을 활용해서 리콜 현황 감독 및 패널티 부여하기
+                               </div>
+                           </div>
+                       </div>
+                   </div>
+                   <div class="summary-box back" data-index="2" style="left: 516px;">
+                       <div class="summary-hover" style="background-color:#1abc9c">
+                           <div class="info">Item 3</div>
+                           <div class="title">감독기관<br></div>
+                           <div class="content">
+                            - 리콜 현황 보기<br/>
+                            - 리콜 패널티 부여하기
+                           </div>
+                           <a href="https://recall.run.goorm.io/public" class="btn btn-default detail_link">READ MORE</a>
+                       </div>
+                   </div>
+                </div>
+            </div>
+        </center>
+    </div>
+    <div id="footer" style="bottom: 0px;">
+        모두의리콜 우승 가즈아!
+   </div>
+
+    <div id="popupcontent">
+        <iframe width="100%" height="100%" frameborder="0" framespacing="0" marginheight="0" marginwidth="0" scrolling="no" vspace="0"></iframe>
+    </div>
+</body>
+
+
+</html>
+
+

@@ -1,0 +1,289 @@
+body {
+  display: flex;
+  flex-direction: column;
+  margin: 0;
+  padding: 0;
+  font-family: "NOTO SANS KR", sans-serif;
+}
+
+header {
+  .container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    h1 {
+      margin: 0;
+    }
+
+    span {
+      cursor: pointer;
+      font-size: 1.5em;
+    }
+  }
+}
+
+#chatBody {
+  height: calc(100vh - 137px - 47px);
+
+  .container {
+    &::-webkit-scrollbar {
+      width: 0 !important;
+    }
+
+    background-color: #f2f2f2;
+    height: 100%;
+    overflow-y: auto;
+  }
+
+  .BotChatBox {
+    display: flex;
+    padding: 12px 0;
+
+    .profile {
+      margin-right: 12px;
+
+      img {
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        object-fit: cover;
+      }
+    }
+
+    .chat {
+      display: inline-flex;
+      flex-direction: column;
+      margin-top: 24px;
+      padding: 15px 25px;
+      background-color: #fff;
+
+      $border-radius: 15px;
+      border-radius: 0 $border-radius $border-radius $border-radius;
+
+      span {
+        word-break: keep-all;
+      }
+
+      .chatSetis {
+        line-height: 100%;
+        text-align: right;
+
+        span {
+          font-size: 0.8em;
+          color: #000;
+          cursor: pointer;
+          text-decoration: none;
+          transition: color 0.3s ease;
+
+          &:hover {
+            color: #888;
+          }
+        }
+      }
+    }
+  }
+
+  .userChatBox {
+    display: flex;
+    flex-direction: row-reverse;
+    padding: 12px 0;
+
+    .chat {
+      display: inline-block;
+      padding: 15px 25px;
+      background-color: #F6D046;
+
+      $border-radius: 15px;
+      border-radius: $border-radius 0 $border-radius $border-radius;
+
+      span {
+        word-break: keep-all;
+      }
+    }
+  }
+}
+
+#chat {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: calc(100% - 2px);
+
+  .rollUp {
+    display: flex;
+    background-color: #f2f2f2;
+    flex-direction: column;
+
+    .rollUpNav {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      width: 100%;
+      height: 15px;
+      background-color: #fff;
+      border-radius: 12px 12px 0 0;
+      border: solid 1px #d9d0d0;
+      border-bottom: none;
+      // box-shadow: 0 0 6px 0 #000;
+
+
+      .designBar {
+        width: 6em;
+        height: 7.5px;
+        border-radius: 25px;
+        background-color: #d9d0d0;
+      }
+    }
+
+    .itemsList {
+      display: flex;
+      justify-content: space-around;
+      margin: 0;
+      padding: 0;
+      list-style: none;
+
+      li {
+        border: solid 1px #f6d046;
+        padding: 0 12px;
+        color: black;
+        border-radius: 24px;
+        cursor: pointer;
+        user-select: none;
+        transition: .3s color, .3s background-color;
+
+        &.active, &:hover {
+          color: white;
+          background-color: #F6D046;
+        }
+      }
+    }
+
+    .navItems {
+      padding: 12px 0;
+      background-color: #fff;
+    }
+
+    .sublistContainer {
+      display: none;
+    }
+
+    .subList {
+      display: flex;
+      margin: 12px 0 0 0;
+    }
+  }
+
+
+  form {
+    display: flex;
+    padding: 15px;
+    background-color: #fff;
+  }
+
+  .chatContent {
+    display: inline-block;
+    margin: 0 12px;
+    width: 100%;
+    outline: none;
+    border: solid 1px #ddd;
+    border-radius: 25px;
+    padding: 12px 24px;
+  }
+
+  .button {
+      display: inline-block;
+      margin: 0;
+      padding: 12px;
+      border: none;
+      cursor: pointer;
+      background-color: #f6d046;
+      border-radius: 50%;
+      outline: none;
+      transition: opacity .3s ease;
+
+      &:hover {
+        opacity: .7;
+      }
+
+      span {
+        font-size: 1.1em;
+        color: #fff;
+      }
+  }
+}
+
+.container {
+  max-width: 1000px;
+  margin: 0 auto;
+
+  &.cp {
+    padding: 0 15px;
+  }
+}
+
+#setisform {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: none;
+
+  .container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    .background {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0,0,0,0.7);
+    }
+  }
+
+  form {
+    display: flex;
+    flex-direction: column;
+    z-index: 30;
+  }
+
+  .setisText {
+    width: 450px;
+    min-height: 250px;
+    padding: 18px;
+    border: none;
+    outline: none;
+    border-radius: 5px;
+    resize: vertical;
+  }
+
+  .setisSubmit {
+    margin-top: 12px;
+    border: none;
+    outline: none;
+    padding: 12px 0;
+    border-radius: 25px;
+    border: solid 1px #f6d046;
+    background-color: #f6d046;
+    cursor: pointer;
+    transition: .3s color, .3s background;
+
+    &:hover {
+      background: none;
+      color: #fff;
+    }
+  }
+}
+
+form {
+  margin: 0;
+}

@@ -1,0 +1,69 @@
+<html>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <link href="https://fonts.googleapis.com/css?family=Noto+Sans+KR&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.1/css/all.css">
+  <link rel="stylesheet" href="static/css/index.min.css">
+  <title>리콜봇</title>
+</head>
+<body>
+  <header>
+    <div class="container cp">
+      <h1>리콜봇</h1>
+
+      <span class="fas fa-fw fa-redo-alt" onclick="reset()" title="처음으로"></span>
+    </div>
+  </header>
+
+  <section id="chatBody">
+    <div class="container cp">
+    
+    </div>
+  </section>
+  <aside id="chat">
+    <div class="container">
+        <div class="rollUp">
+        <div class="rollUpNav">
+          <div class="designBar"></div>
+        </div>
+        <nav class="navItems">
+          <ul class="resentItems itemsList">
+            <li class="selectitems">건강검진</li>
+            <li class="selectitems">다자녀 혜택</li>
+            <li class="selectitems">예방접종</li>
+            <li class="selectitems">어린이집 지원</li>
+            <li class="selectitems">소고기</li>
+          </ul>
+        </nav>
+      </div>
+      <form method="post" onsubmit="return sendMessage()">
+        <input type="hidden" name="userId">
+        <span class="button showList" title="하위 메뉴 보기">
+          <span class="fas fa-arrow-up fa-fw"></span>
+        </span>
+        <input type="text" placeholder="내용을 입력해주세요." name="userContent" class="chatContent">
+        <button type="submit" class="button chatSubmit" title="메시지 보내기"><span class="fas fa-paper-plane fa-fw"></span></button>
+      </form>
+    </div>
+  </aside>
+
+  <aside id="setisForm">
+    <div class="container">
+      <div class="background"></div>
+      <form onsubmit="return setisform()" method="post">
+        <input type="hidden" name="targetIdx">
+        <textarea placeholder="이곳에 내용을 입력해주세요." class="setisText" name="content" id="unsetisContent"></textarea>
+        <input type="submit" value="제출하기" class="setisSubmit">
+      </form>
+    </div>
+  </aside>
+  <script src="static/js/jquery.js"></script>
+  <script src="static/js/index.js" charset="utf-8"></script>
+    
+    <script>
+        botchat('0', "안녕하세요, 리콜 챗봇입니다. <br> 리콜관련 무엇이든지 물어보세요! <br><br> 만족도를 입력해주시면, 챗봇이 더 똑똑해 질거에요!");
+    </script>
+</body>
+</html>
