@@ -1,6 +1,6 @@
 // 봇의 채팅을 입력함
 function botchat(idx, text) {
-  var query = '<div class=\"botChatBox"> <div class="profile"> <img src="static/img/user.jpg" alt="챗봇 프로필 이미지"> </div> <div class="chat"> <span>' + text +'</span> <div class="chatSetis"> <span href="#" class="far fa-thumbs-up fa-fw" onclick=\"setis(' + idx + ')\" title="챗봇의 답변이 마음에 들어요!"></span><span href="#" onclick="unsetis(' + idx + ')" class="far fa-thumbs-down fa-fw" title="챗봇의 답변이 마음에 들지 않아요!"></span>  </div>  </div></div>';
+  var query = '<div class=\"botChatBox"> <div class="profile"> <img src="../img/user.jpg" alt="챗봇 프로필 이미지"> </div> <div class="chat"> <span>' + text +'</span> <div class="chatSetis"> <span href="#" class="far fa-thumbs-up fa-fw" onclick=\"setis(' + idx + ')\" title="챗봇의 답변이 마음에 들어요!"></span><span href="#" onclick="unsetis(' + idx + ')" class="far fa-thumbs-down fa-fw" title="챗봇의 답변이 마음에 들지 않아요!"></span>  </div>  </div></div>';
 
   $("#chatBody .container").append(query);
 

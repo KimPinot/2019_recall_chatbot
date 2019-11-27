@@ -1,0 +1,94 @@
+<!DOCTYPE HTML>
+<html lang="ko">
+<head>
+    <!-- Meta -->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <!-- Title -->
+    <title>리콜봇</title>
+    <!-- Web Font & CSS -->
+    <link href="//fonts.googleapis.com/css?family=Noto+Sans+KR&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/static/css/index.css">
+    <link rel="stylesheet" href="//use.fontawesome.com/releases/v5.7.1/css/all.css">
+</head>
+<body>
+    <!--debug Code-->
+    <aside id="debug" class="hide">
+        <p id="debugWidthHeight"></p>
+        <script>
+            // 너비 높이 구하는 기능
+            document.getElementById("debugWidthHeight").innerHTML = "너비 : " + screen.width + " 높이 : " + screen.height;
+        </script>
+    </aside>
+
+    <!-- header -->
+    <header>
+        <div class="container">
+            <h1>리콜봇</h1>
+
+            <div id="JSresetAllChat">
+                <i class="fas fa-redo-alt fa-fw" id="JSchatBotReset"></i>
+            </div>
+        </div>
+    </header>
+
+    <!-- chatBot Wrapper > Body & Send Form -->
+    <section id="chatBotWrapper">
+        <div class="container">
+            <!-- chat Body -->
+            <div class="chatBody">
+                <div class="botchat" data-chatidx="0">
+                    <div class="profile">
+                        <img src="//placehold.it/50x50">
+                    </div>
+
+                    <div class="chat">
+                        <span>이곳에 챗봇의 답변이 담기게 됩니다 :)</span>
+                        <div class="function">
+                            <ul class="chatBotSetis">
+                                <li id="JSchatBotSetisYes">
+                                    <i class="far fa-thumbs-up"></i>
+                                </li>
+                                <li id="JSchatBotSetisNo">
+                                    <i class="far fa-thumbs-down"></i>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+            <!-- send Form -->
+            <div class="chatBotForm">
+                <input type="text" id="JSchatBotValue" placeholder="궁금하신 내용을 입력해 주세요!" />
+                <button id="JSchatBotSubmit">
+                    <i class="fas fa-paper-plane fa-fw"></i>
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- 만족도 조사 Form -->
+    <aside id="chatBotSetis" class="">
+        <div class="container">
+            <div class="background" id="JSchatBotSetisClose"></div>
+            <div class="form">
+                <div class="center">
+                    <h1>챗봇 피드백</h1>
+                    <input type="hidden" id="JSchatBotSetisIdx">
+                    <textarea id="JSchatBotSetisValue" placeholder="이곳에 만족하지 못하셨던 사항을 입력해주시면, 챗봇이 더 똑똑해질 수 있어요!"></textarea>
+                    <button id="JSchatBotSetisSubmit">전송하기</button>
+                </div>
+            </div>
+        </div>
+    </aside>
+
+    <!-- 자바스크립트 불러오기 -->
+    <script src="/static/js/chatbot.js"></script>
+    <script>
+
+    </script>
+</body>
+</html>
