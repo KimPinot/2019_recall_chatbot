@@ -2,6 +2,29 @@ window.addEventListener('DOMContentLoaded', () => {
     const chatBotValue = document.getElementById("JSchatBotValue");
     const chatBotSubmit = document.getElementById("JSchatBotSubmit");
 
+    const chatBotBody = document.getElementById("chatBody");
+
+    // AJAX
+    const AJAX = (method, link, data) => {
+        const xhttp = new XMLHttpRequest();
+
+        // 요청 성공시
+        xhttp.onreadystatechange = function () {
+            if (xhttp.readyState === 4 && xhttp.status === 200) {
+                r = xhttp.responseText;
+            } else {
+                // 요청 실패시 경고를 띄움
+                console.warn(xhttp.responseText);
+            }
+        };
+        xhttp.open(method, link, true);
+        xhttp.setRequestHeader('Content-type', 'application/json');
+        xhttp.send(data);
+
+        console.log([r]);
+        return [r];
+    };
+
     // 챗봇으로 텍스트를 작성하는 코드
     chatBotValue.addEventListener('keyup', () => {
         if (window.event.keyCode === 13) {
@@ -14,46 +37,57 @@ window.addEventListener('DOMContentLoaded', () => {
         chatBotSend();
     });
 
+    // 사용자가 메시지를 보내는 기능 추가
     const chatBotSend = () => {
-        console.log(chatBotValue.value);
+        const data = `
+            <div class="userchat">
+                <span class="chat">
+                    ` + chatBotValue.value + `         
+                </span>
+            </div>
+        `
+        chatBotBody.innerHTML += data;
         chatBotValue.value = "";
     };
 
-    // var urls = '';
-    // var opts = {
-    //     method: 'POST',
-    //     body: '{longUrl:"' + urls + '"}',
-    //     headers: {
-    //         "Content-Type": "application/json"
-    //     }
-    // };
-    // fetch('', opts).then(function (response) {
-    //     return response.json();
-    // }).then(function (body) {
-    //     window.Unity.call(JSON.parse(JSON.stringify(body)).id);
-    // });
+    const botChat = (setisbool) => {
+        const chatbotidx = 1;
+        const chatbottext = "테스트";
+        let setisform = "";
 
-        let data = `
-        <div class="botchat" data-chatidx="` + 1 +`">
+        // 값이 true 일 경우, 만족도 조사 기능 추가
+        if (setisbool === true) {
+            setisform = `
+            <ul class="chatBotSetis">
+                <li id="JSchatBotSetisYes">
+                   <i class="far fa-thumbs-up"></i>
+                </li>
+                <li id="JSchatBotSetisNo">
+                    <i class="far fa-thumbs-down"></i>
+                </li>
+            </ul>
+            `
+        }
+
+        const data = `
+        <div class="botchat" data-chatidx="` + chatbotidx + `">
         <div class="profile">
           <img src="//placehold.it/50x50">
         </div>
 
         <div class="chat">
-          <span>` + '테스트' + `</span>
+          <span>` + chatbottext + `</span>
           <div class="function">
             <div class="fake"></div>
-            <ul class="chatBotSetis">
-              <li id="JSchatBotSetisYes">
-                <i class="far fa-thumbs-up"></i>
-              </li>
-              <li id="JSchatBotSetisNo">
-                <i class="far fa-thumbs-down"></i>
-              </li>
-            </ul>
+            ` + setisform + `
           </div>
         </div>
 
       </div>
     `;
+        chatBotBody.innerHTML += data;
+    };
+
+
+    botChat();
 });

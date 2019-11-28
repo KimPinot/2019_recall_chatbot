@@ -4,6 +4,7 @@
   box-sizing: border-box;
   font-family: "NOTO SANS KR", sans-serif;
   outline: none;
+  word-break: keep-all;
 
   @media screen and (min-width: 768px) {
     &:focus {
@@ -15,6 +16,7 @@
 body {
   display: grid;
   height: 100vh;
+  overflow: hidden;
   grid-template-rows: [header] 56px [chatbody] auto;
 }
 
@@ -45,9 +47,18 @@ header {
 #chatBotWrapper {
   .container {
     display: grid;
-    padding: 10px 15px;
+    padding: 10px 30px;
     height: 100%;
     grid-template-rows: [chatbody] auto [chatwork] 50px;
+  }
+
+  #chatBody {
+    height: calc(100vh - 56px - 50px - 15px);
+    overflow-y: auto;
+
+    &::-webkit-scrollbar {
+      width: 0 !important;
+    }
   }
 
   .chatBotForm {
@@ -121,6 +132,27 @@ header {
         }
       }
     }
+  }
+
+  @media screen and (max-width: 424px) {
+    .chat {
+      max-width: none !important;
+    }
+  }
+}
+
+// 유저 채팅
+.userchat {
+  display: flex;
+  justify-content: right;
+  padding: 12px 0;
+
+  .chat {
+    display: inline-block;
+    border: solid 1px dimgray;
+    padding: 10px 15px;
+    border-radius: 15px 0 15px 15px;
+    max-width: 45%;
   }
 
   @media screen and (max-width: 424px) {

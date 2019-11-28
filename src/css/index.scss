@@ -24,7 +24,8 @@ header {
 }
 
 #chatBody {
-  height: calc(100vh - 137px - 47px);
+  height: calc(100vh - 56px - 50px);
+  overflow-y: auto;
 
   .container {
     &::-webkit-scrollbar {

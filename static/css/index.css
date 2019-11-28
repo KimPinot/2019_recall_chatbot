@@ -3,7 +3,8 @@
   padding: 0;
   box-sizing: border-box;
   font-family: "NOTO SANS KR", sans-serif;
-  outline: none; }
+  outline: none;
+  word-break: keep-all; }
   @media screen and (min-width: 768px) {
     *:focus {
       border: solid 3px darkblue !important; } }
@@ -11,6 +12,7 @@
 body {
   display: grid;
   height: 100vh;
+  overflow: hidden;
   grid-template-rows: [header] 56px [chatbody] auto; }
 
 #debug.hide {
@@ -29,9 +31,15 @@ header {
 
 #chatBotWrapper .container {
   display: grid;
-  padding: 10px 15px;
+  padding: 10px 30px;
   height: 100%;
   grid-template-rows: [chatbody] auto [chatwork] 50px; }
+
+#chatBotWrapper #chatBody {
+  height: calc(100vh - 56px - 50px - 15px);
+  overflow-y: auto; }
+  #chatBotWrapper #chatBody::-webkit-scrollbar {
+    width: 0 !important; }
 
 #chatBotWrapper .chatBotForm {
   display: grid;
@@ -83,6 +91,20 @@ header {
           margin-right: 5px; }
   @media screen and (max-width: 424px) {
     .botchat .chat {
+      max-width: none !important; } }
+
+.userchat {
+  display: flex;
+  justify-content: right;
+  padding: 12px 0; }
+  .userchat .chat {
+    display: inline-block;
+    border: solid 1px dimgray;
+    padding: 10px 15px;
+    border-radius: 15px 0 15px 15px;
+    max-width: 45%; }
+  @media screen and (max-width: 424px) {
+    .userchat .chat {
       max-width: none !important; } }
 
 #chatBotSetis {

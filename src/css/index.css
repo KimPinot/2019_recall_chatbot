@@ -16,7 +16,8 @@ header .container {
     font-size: 1.5em; }
 
 #chatBody {
-  height: calc(100vh - 137px - 47px); }
+  height: calc(100vh - 56px - 50px);
+  overflow-y: auto; }
   #chatBody .container {
     background-color: #f2f2f2;
     height: 100%;
