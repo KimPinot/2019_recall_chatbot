@@ -4,8 +4,8 @@ window.addEventListener('DOMContentLoaded', () => {
 
     const chatBotBody = document.getElementById("chatBody");
 
-    const chatBotSetisYes = document.getElementById("JSchatBotSetisYes");
-    const chatBotSetisNo = document.getElementById("JSchatBotSetisNo");
+    const chatBotSetisTrue = document.getElementsByClassName("JSchatBotSetisYes");
+    const chatBotSetisFalse = document.getElementsByClassName("JSchatBotSetisNo");
 
     // 챗봇으로 텍스트를 작성하는 코드
     chatBotValue.addEventListener('keyup', () => {
@@ -36,14 +36,6 @@ window.addEventListener('DOMContentLoaded', () => {
         chatBotBody.innerHTML += data;
         chatBotValue.value = "";
     };
-
-    chatBotSetisYes.addEventListener('click', function(){
-        botChat(false, "setisTrue");
-    });
-
-    chatBotSetisNo.addEventListener('click', function(){
-        botChat(false, "setisFalse");
-    });
 
     // 챗봇이 메시지를 보내는 기능
     const botChat = (setisbool, sendtext) => {
@@ -106,6 +98,16 @@ window.addEventListener('DOMContentLoaded', () => {
         chatBotBody.innerHTML += data;
     };
 
+    // // 만족도 조사 (응답에 만족함)
+    // chatBotSetisTrue.addEventListener('click', function(){
+    //     botChat(false, "setisTrue");
+    // });
+    //
+    // // 만족도 조사 (응답에 만족하지 아니함)
+    // chatBotSetisFalse.addEventListener('click', function(){
+    //     botChat(false, "setisFalse");
+    // });
+
     // AJAX
     const AJAX = (method, link, data) => {
         const xhttp = new XMLHttpRequest();
@@ -151,4 +153,5 @@ window.addEventListener('DOMContentLoaded', () => {
     };
 
     botChat(false, "welcome");
+    botChat(true, "테스트 메시지");
 });
