@@ -131,6 +131,11 @@ header {
     border-radius: 15px; }
     #apply .center h1 {
       margin-bottom: 5px; }
+    #apply .center input {
+      padding: 10px;
+      font-size: 12px;
+      border: solid 1px dimgray;
+      margin-bottom: 5px; }
     #apply .center textarea {
       padding: 10px;
       height: 350px;

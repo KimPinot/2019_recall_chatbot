@@ -1,6 +1,7 @@
 let answerarray = "";
 let lastQuestion = "";
 let answerSelectLength = -1;
+let query = "";
 
 window.addEventListener('DOMContentLoaded', () => {
     const chatBotValue = document.getElementById("JSchatBotValue");
@@ -55,7 +56,7 @@ window.addEventListener('DOMContentLoaded', () => {
                 const f = document.getElementById('JSchatBotRecallForm');
                 f.addEventListener('click', () => {
                     chatSend("신청" + answerSelect[j].innerHTML, false, "apply");
-                    apply(answerarray[c].Link_Gubun);
+                    apply(answerarray[c].Link_Gubun, answerarray[c].Question);
                 });
                 f.removeAttribute("id");
             };
@@ -123,7 +124,8 @@ window.addEventListener('DOMContentLoaded', () => {
         chatBotValue.value = "";
     };
 
-    const apply = (link) => {
+    const apply = (link, title) => {
+        query = title;
         applyForm.innerHTML = `
         <div class="container">
             <div class="background" id="JSchatBotApplyClose"></div>
@@ -131,6 +133,7 @@ window.addEventListener('DOMContentLoaded', () => {
               <div class="center">
                 <h1>리콜 신청</h1>
                 <input type="hidden" id="JSchatBotApplyLink" value="` + link + `">
+                <input type="text" id="JSchatBotChadae" placeholder="고유번호 입력" value="KMHEM42APXA123456">
                 <textarea id="JSchatBotApplyValue" placeholder="리콜 신청 사유 입력"></textarea>
                 <button id="JSchatBotApplysSubmit">전송하기</button>
               </div>
@@ -143,6 +146,7 @@ window.addEventListener('DOMContentLoaded', () => {
         const c = document.getElementById('JSchatBotApplyClose');
         const s = document.getElementById('JSchatBotApplysSubmit');
         const l = document.getElementById('JSchatBotApplyLink');
+        const cha = document.getElementById('JSchatBotChadae');
 
         const close = () => {
             applyForm.removeAttribute('class');
@@ -157,10 +161,13 @@ window.addEventListener('DOMContentLoaded', () => {
 
             const data = {
                 "user_id": "0xe292c994516c8b35c9743b260ec2086d1a47e14d",
-                "user_gubun": "소비자",
-                "serialno": l.value,
-                "value": v.value,
-                "status": "request"
+                "user_gubun": encodeURI("소비자"),
+                "infoId" : encodeURI(l.value),
+                "serialno" : encodeURI(cha.value),
+                "request_remarks": encodeURI(v.value),
+                "status": "request",
+                "score" : 0,
+                "score_remarks" : "test"
             };
 
             // console.log(data);
@@ -172,6 +179,7 @@ window.addEventListener('DOMContentLoaded', () => {
         c.addEventListener('click', () => {
             const check = confirm("정말로 입력을 종료하실건가요?");
             if (check) {
+                close();
                 close();
             } else {
                 return false;
@@ -192,9 +200,13 @@ window.addEventListener('DOMContentLoaded', () => {
             `;
         } else if (sendtext === "cantfinddata") {
             chatbottext = `
-                질문하신 내용과 유사한 답을 찾지 못했어요 :(
+                질문하신 내용과 유사한 답을 찾지 못했어요.
             `;
-        } else {
+        } else if (sendtext === "compelete") {
+            chatbottext = query + ` 에 대한 리콜 신청이 완료되었어요!
+            `;
+        }
+        else {
             chatbottext = sendtext;
         }
 
@@ -238,6 +250,11 @@ window.addEventListener('DOMContentLoaded', () => {
                 r = xhttp.responseText;
                 if (r === "[\"유사도 0.3 이하 이면 미답변으로 처리합니다.\"]") {
                     botChat('cantfinddata');
+                    return false;
+                }
+
+                if (r === "[\"complete\"]") {
+                    botChat('compelete');
                     return false;
                 }
 
