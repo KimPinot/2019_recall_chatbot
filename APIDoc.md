@@ -2,16 +2,12 @@
 
 - 개인 키 바인딩
 
-  - GET /user/getkey
-
-  - Response : 200
-
-    ```json
-    {
-        "personal-key" : String
-    }
-    ```
-  
+  - GET 
+  - getkey
+  - user_gubun = '소비자'
+  - 개인 어드레스 리턴
+  - [{'user_id': '0xe292c994516c8b35c9743b260ec2086d1a47e14d', 'user_name': '소비자', 'user_gubun': '소비자'}]
+  - 실행방법 : https://recall.run.goorm.io/getkey?user_gubun=%EC%86%8C%EB%B9%84%EC%9E%90
     
 
 - 리콜 조회 : 
