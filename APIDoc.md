@@ -20,7 +20,7 @@
 https://recall.run.goorm.io/callNLPJSON?company=kisa&system=recall&classgubun=ALL&var1=%ED%98%84%EB%8C%80%EC%9E%90%EB%8F%99%EC%B0%A8
 
 
-- 리콜 입력 조회 : 
+- 리콜 이력(히스토리) 조회 : 
 
   - GET
   - recall_history
@@ -29,7 +29,7 @@ https://recall.run.goorm.io/callNLPJSON?company=kisa&system=recall&classgubun=AL
     
 https://recall.run.goorm.io/recall_history?infoId=RCLL_000000000019416
 
-- 리콜 신청 / 접수 / 이력 / 완료 / 거절 : 
+- 리콜 신청 / 접수 / 수리내역 입력 / 완료 / 거절 : 
 
   - POST
   - recall_request <---리콜 신청, 접수, 이력, 완료 하나로 다 함
