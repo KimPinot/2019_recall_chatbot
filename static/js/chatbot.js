@@ -6,13 +6,8 @@ let query = "";
 window.addEventListener('DOMContentLoaded', () => {
     const chatBotValue = document.getElementById("JSchatBotValue");
     const chatBotSubmit = document.getElementById("JSchatBotSubmit");
-
     const chatBotBody = document.getElementById("chatBody");
-
-    // 예상 답변 설정
     const answerSelect = document.getElementsByClassName("JSchatBotAnswerSelect");
-
-    // 블록체인 신청 폼
     const applyForm = document.getElementById('apply');
 
     // 채팅 입력시 하단으로 강제 스크롤
@@ -241,7 +236,7 @@ window.addEventListener('DOMContentLoaded', () => {
 
         // 요청 성공시
         xhttp.onreadystatechange = () => {
-            console.log(xhttp.readyState);
+            // console.log(xhttp.readyState);
             if (xhttp.readyState !== XMLHttpRequest.DONE) {
                 chatBotValue.setAttribute('disabled', ' disabled');
                 chatBotValue.setAttribute('placeholder', '응답을 기다리는 중이에요!');
