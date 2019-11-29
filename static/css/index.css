@@ -99,6 +99,15 @@ header {
     color: #000;
     text-decoration: none;
     font-size: 12px; }
+  .botchat .small {
+    margin: 10px 0;
+    font-size: 13px; }
+  .botchat .recallArray {
+    padding: 5px 0;
+    border: solid 1px dimgray;
+    margin-top: 10px; }
+    .botchat .recallArray .date {
+      color: #666; }
 
 @media screen and (max-width: 424px) {
   .chat {

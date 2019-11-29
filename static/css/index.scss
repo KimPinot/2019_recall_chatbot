@@ -138,6 +138,21 @@ header {
     text-decoration: none;
     font-size: 12px;
   }
+
+  .small {
+    margin: 10px 0;
+    font-size: 13px;
+  }
+
+  .recallArray {
+    padding: 5px 0;
+    border: solid 1px dimgray;
+    margin-top: 10px;
+
+    .date {
+      color: #666;
+    }
+  }
 }
 
 
