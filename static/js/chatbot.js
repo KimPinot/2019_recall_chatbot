@@ -154,7 +154,7 @@ window.addEventListener('DOMContentLoaded', () => {
     };
 
     // 사용자가 메시지를 보내는 기능
-    const chatSend = (value, isajax, option, query) => {
+    const chatSend = (value, isajax, option, query1) => {
 ///        console.log([lastQuestion, value, isajax]);
         if (lastQuestion === value) {
             alert('[일반보내기] 똑같은 질의를 여러번 할 수 없습니다!');
@@ -181,7 +181,7 @@ window.addEventListener('DOMContentLoaded', () => {
         }
 
         if (option === "recallInfo") {
-            AJAX("GET", "localhost:4001/api/user/recallhistory/infoId/" + query, null);
+            AJAX("GET", "localhost:4001/api/user/recallhistory/infoId/" + query1, null);
         }
 
         // console.log([value, isajax, option, query]);
@@ -190,17 +190,31 @@ window.addEventListener('DOMContentLoaded', () => {
     };
 
 // 리콜 신청 폼
-    const apply = (link, title) => {
+    const apply = (link, title, isbool) => {
         applyTitle = title;
+        if (isbool) {
+            applyBody = `
+                <h1>리콜 평가</h1>
+                <input type="hidden" id="JSchatBotApplystat" value="finish">
+                <input type="hidden" id="JSchatBotApplyLink" value="` + link + `">
+                <input type="number" id="JSchatBotChadae" placeholder="평가 점수 입력" min="1" max="5">
+                <textarea id="JSchatBotApplyValue" placeholder="추가 내용 입력"></textarea>
+            `;
+        } else {
+            applyBody = `
+                <h1>리콜 신청</h1>
+                <input type="hidden" id="JSchatBotApplystat" value="request">
+                <input type="hidden" id="JSchatBotApplyLink" value="` + link + `">
+                <input type="text" id="JSchatBotChadae" placeholder="고유번호 입력" value="KMHEM42APXA123456">
+                <textarea id="JSchatBotApplyValue" placeholder="리콜 신청 사유 입력"></textarea>
+            `;
+        }
         applyForm.innerHTML = `
         <div class="container">
             <div class="background" id="JSchatBotApplyClose"></div>
             <div class="form">
               <div class="center">
-                <h1>리콜 신청</h1>
-                <input type="hidden" id="JSchatBotApplyLink" value="` + link + `">
-                <input type="text" id="JSchatBotChadae" placeholder="고유번호 입력" value="KMHEM42APXA123456">
-                <textarea id="JSchatBotApplyValue" placeholder="리콜 신청 사유 입력"></textarea>
+                ` + applyBody + `            
                 <button id="JSchatBotApplysSubmit">전송하기</button>
               </div>
             </div>
@@ -208,6 +222,7 @@ window.addEventListener('DOMContentLoaded', () => {
     `;
         applyForm.setAttribute('class', 'show');
 
+        const b = document.getElementById('JSchatBotApplystat');
         const v = document.getElementById('JSchatBotApplyValue');
         const c = document.getElementById('JSchatBotApplyClose');
         const s = document.getElementById('JSchatBotApplysSubmit');
@@ -217,11 +232,10 @@ window.addEventListener('DOMContentLoaded', () => {
         const close = () => {
             applyForm.removeAttribute('class');
             applyForm.innerHTML = "";
-            botChat('사용자가 작업을 취소했습니다.');
         };
 
         s.addEventListener('click', () => {
-            if (v.value === "") {
+            if (cha.value === v.value || "") {
                 alert("내용을 입력해주세요!");
                 return false;
             }
@@ -232,9 +246,9 @@ window.addEventListener('DOMContentLoaded', () => {
                 "infoId": encodeURI(l.value),
                 "serialno": encodeURI(cha.value),
                 "request_remarks": encodeURI(v.value),
-                "status": "request",
-                "score": 0,
-                "score_remarks": "test"
+                "status": encodeURI(b.value),
+                "score": encodeURI(cha.value),
+                "score_remarks": encodeURI(v.value)
             };
 
             // console.log(data);
@@ -247,6 +261,7 @@ window.addEventListener('DOMContentLoaded', () => {
             const check = confirm("리콜 작성을 취소하시겠습니까?");
             if (check) {
                 close();
+                botChat('사용자가 작업을 취소했습니다.');
             } else {
                 return false;
             }
@@ -324,8 +339,7 @@ window.addEventListener('DOMContentLoaded', () => {
                 // infoid가 있을 시, 다른 리스트 목록으로 추출
                 if (r.indexOf("infoId") !== -1) {
                     if (r.indexOf("insert_dt") !== -1) {
-                        query =
-                            botChat(responseProcess(r, "insert_dt"));
+                        responseProcess(r, "insert_dt");
                         return true;
                     }
 
@@ -420,17 +434,39 @@ window.addEventListener('DOMContentLoaded', () => {
             return r;
         } else if (dataName === "insert_dt") {
             recallsubarray = JSON.parse(JSON.parse(d)[0]);
-            console.log(recallsubarray);
             // 헤더
             r += query + `에 대한 리콜 결과는 다음과 같습니다.
         `;
 
-            // 반복문
-            for (let i = 0; i < recallsubarray.length; i++) {
-                r += `<div class="recallArray"> <span class="date">` +  recallsubarray[i].insert_dt + ` </span> ㅡ <span class="name">` + recallsubarray[i].user_gubun + `</span> : <span class="text"> ` + recallsubarray[i].request_remarks + ` </span> <span>(` + recallsubarray[i].status + `)</span></div>`
+            let max = 0;
+
+            if (recallsubarray.length === 4) {
+                max = 3;
+            } else {
+                max = recallsubarray.length;
             }
 
-            return r;
+            // 반복문
+            for (let i = 0; i < max; i++) {
+                r += `<div class="recallArray"> <span class="date">` + recallsubarray[i].insert_dt + ` </span> ㅡ <span class="name">` + recallsubarray[i].user_gubun + `</span> : <span class="text"> ` + recallsubarray[i].request_remarks + ` </span> <span>(` + recallsubarray[i].status + `)</span></div>`;
+            }
+
+            if (recallsubarray.length === 4) {
+                r += `
+                    <div class="recallArray"> <span class="date">` + recallsubarray[3].insert_dt + ` </span> ㅡ <span class="name">` + recallsubarray[3].user_gubun + `</span> : <span class="text"> ` + recallsubarray[3].request_remarks + ` </span> <button id="JSrecallForm">(` + recallsubarray[3].status + `)</button></div>
+                `;
+            }
+
+            botChat(r);
+
+            const recallForm = document.getElementById('JSrecallForm');
+
+            if (recallsubarray.length === 4) {
+                recallForm.addEventListener('click', () => {
+                    apply(recallsubarray[3].infoId, false, true);
+                    recallForm.removeAttribute('id');
+                });
+            }
         }
     };
 
