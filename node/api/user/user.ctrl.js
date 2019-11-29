@@ -2,7 +2,7 @@ const request = require('request-promise');
 
 // getalldata
 exports.getalldata = async (ctx) => {
-    let promise = async () => {
+    const promise = async () => {
         const t = encodeURI("현대자동차");
         let r = await request.get(
             {
