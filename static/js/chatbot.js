@@ -1,6 +1,6 @@
 let answerarray = "";
 let lastQuestion = "";
-let answerSelectLength = 0;
+let answerSelectLength = -1;
 
 window.addEventListener('DOMContentLoaded', () => {
     const chatBotValue = document.getElementById("JSchatBotValue");
@@ -34,27 +34,47 @@ window.addEventListener('DOMContentLoaded', () => {
             }
             const c = answerSelect[i].getAttribute("data-idx");
 
-            // console.log([j, c]);
-            answerSelect[i].addEventListener("click", () => {
+            const dooooo = () => {
                 if (answerSelect[j].innerHTML === lastQuestion) {
-                    alert('똑같은 질의를 여러번 할 수 없습니다!');
+                    alert('[선택해서보내기] 똑같은 질의를 여러번 할 수 없습니다!');
                     return false;
                 }
                 const v =
                     answerSelect[c].getAttribute('data-answer') + `
                     <br>
                     <a href="http://` + answerarray[c].Link + `" target="_blank">자세히보기</a>
+                    <br>
+                    <button id="JSchatBotRecallForm">
+                        리콜 신청하기
+                    </button>
                 `;
-                chatSend(answerSelect[j].innerHTML, false);
+
+                chatSend(answerSelect[j].innerHTML, false, "query");
                 botChat(v);
-            });
+
+                const f = document.getElementById('JSchatBotRecallForm');
+                f.addEventListener('click', () => {
+                    chatSend("신청" + answerSelect[j].innerHTML, false, "apply");
+                });
+                f.removeAttribute("id");
+            };
+
+            // console.log([j, c]);\
+            console.log(answerSelect[j].getAttribute('eventseted'));
+            if (answerSelect[j].getAttribute('eventseted') !== "true") {
+                console.log('이벤트가 감지되지 않음');
+                answerSelect[j].addEventListener("click", () => {
+                    dooooo();
+                    answerSelect[j].setAttribute('eventseted', "true");
+                });
+            }
         }
 
         if (answerSelect.length !== 0) {
             answerSelectLength = answerSelect.length - 1;
         }
-        // console.log([Number(answerSelectLength + 1), answerSelect.length]);
-        // console.log("ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ");
+        console.log([Number(answerSelectLength + 1), answerSelect.length]);
+        console.log("ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ");
     };
 
     // 챗봇으로 텍스트를 작성하는 코드
@@ -73,13 +93,13 @@ window.addEventListener('DOMContentLoaded', () => {
 
     // 사용자가 메시지를 보내는 기능
     const chatSend = (value, isajax, Dofunction) => {
-
-        if (lastQuestion === value) {
-            alert('똑같은 질의를 여러번 할 수 없습니다!');
-            return;
+        // console.log([lastQuestion, value, isajax, Dofunction, lastQuestion === value && Dofunction !== "query"]);
+        if (Dofunction !== "query" && lastQuestion === value) {
+            alert('[일반보내기] 똑같은 질의를 여러번 할 수 없습니다!');
+            return false;
         } else if (value === "") {
             alert('내용을 입력해주세요!');
-            return;
+            return false;
         }
 
         const data = `
@@ -139,11 +159,11 @@ window.addEventListener('DOMContentLoaded', () => {
             }
 
             const data = [{
-                "user_id" : "0xe292c994516c8b35c9743b260ec2086d1a47e14d",
-                "user_gubun" : "소비자",
-                "serialno" : l,
-                "value" : v.value,
-                "status" : "request",
+                "user_id": "0xe292c994516c8b35c9743b260ec2086d1a47e14d",
+                "user_gubun": "소비자",
+                "serialno": l,
+                "value": v.value,
+                "status": "request",
             }];
 
             AJAX("POST", "localhost:4001/api/user/apply", data);
@@ -151,12 +171,12 @@ window.addEventListener('DOMContentLoaded', () => {
         });
 
         c.addEventListener('click', () => {
-           const check = confirm("정말로 입력을 종료하실건가요?");
-           if (check) {
+            const check = confirm("정말로 입력을 종료하실건가요?");
+            if (check) {
                 close();
-           } else {
-               return false;
-           }
+            } else {
+                return false;
+            }
         });
     };
 
@@ -269,5 +289,4 @@ window.addEventListener('DOMContentLoaded', () => {
     };
 
     botChat("welcome");
-    chatSend("안녕", false, "apply");
 });
