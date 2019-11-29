@@ -9,6 +9,7 @@ window.addEventListener('DOMContentLoaded', () => {
     const chatBotBody = document.getElementById("chatBody");
     const answerSelect = document.getElementsByClassName("JSchatBotAnswerSelect");
     const applyForm = document.getElementById('apply');
+    const user_id = "0xe292c994516c8b35c9743b260ec2086d1a47e14d";
 
     // 채팅 입력시 하단으로 강제 스크롤
     const bottomScroll = () => {
@@ -90,7 +91,7 @@ window.addEventListener('DOMContentLoaded', () => {
 
     // 사용자가 메시지를 보내는 기능
     const chatSend = (value, isajax) => {
-        // console.log([lastQuestion, value, isajax, Dofunction, lastQuestion === value && Dofunction !== "query"]);
+        console.log([lastQuestion, value, isajax]);
         if (lastQuestion === value) {
             alert('[일반보내기] 똑같은 질의를 여러번 할 수 없습니다!');
             return false;
