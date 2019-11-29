@@ -10,26 +10,31 @@ window.addEventListener('DOMContentLoaded', () => {
     // 챗봇으로 텍스트를 작성하는 코드
     chatBotValue.addEventListener('keyup', () => {
         if (window.event.keyCode === 13) {
-            chatBotSend();
+            chatSend();
         }
     });
 
     // 보내기 버튼이 눌렸을때 텍스트를 보내는 코드
     chatBotSubmit.addEventListener('click', () => {
-        chatBotSend();
+        chatSend();
     });
 
     // 사용자가 메시지를 보내는 기능
-    const chatBotSend = () => {
+    const chatSend = (value) => {
+        let chattext = "";
         if (chatBotValue.value === "") {
             alert('내용을 입력해주세요!');
             return false;
+        } else if (value !== "") {
+            chattext = value;
+        } else {
+            chattext = chatBotValue.value;
         }
 
         const data = `
             <div class="userchat">
                 <span class="chat">
-                    ` + chatBotValue.value + `         
+                    ` + chattext + `         
                 </span>
             </div>
         `;
@@ -121,7 +126,7 @@ window.addEventListener('DOMContentLoaded', () => {
         xhttp.onreadystatechange = () => {
             if (xhttp.readyState === XMLHttpRequest.DONE && xhttp.status === 200) {
                 r = xhttp.responseText;
-                botChat(false, r);
+                botChat(true, responseProcess(r));
             }
         };
         xhttp.open(method, link, true);
@@ -129,11 +134,28 @@ window.addEventListener('DOMContentLoaded', () => {
         // xhttp.setRequestHeader('Access-Control-Allow-Origin', '*');
         await xhttp.send(data);
     };
-
+    
+    // 데이터를 가공하는 함수
     const responseProcess = (d) => {
+        const h = JSON.parse(JSON.parse(d)[0]);
         let r = "";
-
+        // console.log(h[0]);
         
+        r += `
+            테스트 메시지 입니다.
+            <br />
+            으악 어머니 분산처리
+        `;
+        
+        for (let i = 0; i < h.length; i++) {
+            r += `
+                <div>
+                ` +
+                    h[i].Question;
+                + `
+                </div>
+            `;
+        }
 
         return r;
     };
