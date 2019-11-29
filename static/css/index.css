@@ -82,17 +82,10 @@ header {
     padding: 10px 15px;
     border-radius: 0 15px 15px 15px;
     max-width: 45%; }
-    .botchat .chat .function {
-      display: grid;
-      grid-template-columns: auto 40px; }
-      .botchat .chat .function ul.chatBotSetis {
-        display: flex;
-        list-style: none; }
-        .botchat .chat .function ul.chatBotSetis li:not(:last-child) {
-          margin-right: 5px; }
-  @media screen and (max-width: 424px) {
-    .botchat .chat {
-      max-width: none !important; } }
+
+@media screen and (max-width: 424px) {
+  .chat {
+    max-width: none !important; } }
 
 .userchat {
   display: flex;
