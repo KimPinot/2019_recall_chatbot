@@ -117,29 +117,16 @@ header {
     padding: 10px 15px;
     border-radius: 0 15px 15px 15px;
     max-width: 45%;
-
-    .function {
-      display: grid;
-      grid-template-columns: auto 40px;
-
-      ul.chatBotSetis {
-        display: flex;
-        list-style: none;
-
-        li {
-          &:not(:last-child) {
-            margin-right: 5px;
-          }
-        }
-      }
-    }
   }
+}
 
-  @media screen and (max-width: 424px) {
-    .chat {
-      max-width: none !important;
-    }
+
+@media screen and (max-width: 424px) {
+  .chat {
+    max-width: none !important;
   }
+}
+
 }
 
 // 유저 채팅
@@ -164,7 +151,7 @@ header {
 }
 
 // 만족도 조사 Form
-#chatBotSetis {
+#apply {
   display: none;
   position: absolute;
   top: 0;
