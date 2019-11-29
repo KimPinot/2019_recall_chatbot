@@ -16,3 +16,7 @@ exports.getalldata = async (ctx) => {
 
     ctx.body = result;
 };
+
+exports.apply = async (ctx) => {
+    ctx.body = ctx.request.body.value;
+};
