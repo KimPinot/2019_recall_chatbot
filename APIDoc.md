@@ -14,37 +14,33 @@
 
 - 리콜 조회 : 
 
-  - GET /user/requset/{content}
-
-  - Response : 200
-
-    ```json
-{[
-        {
-        	"Title" : String,
-      	 	"Content" : String,
-            "Idx" : String,
-        	"Similarity" : Number
-    	}
-    ]}
-    ```
+  - GET
+  - callNLPJSON
+  - var1 = '현대자동차'
+https://recall.run.goorm.io/callNLPJSON?company=kisa&system=recall&classgubun=ALL&var1=%ED%98%84%EB%8C%80%EC%9E%90%EB%8F%99%EC%B0%A8
 
 
+- 리콜 신청 / 접수 / 이력 / 완료 / 거절 : 
 
-- 리콜 신청 : 
-
-  - POST /user/application/{content}
-
-  - Request
-
-    ```json
-    {
-        "idx" : String,
-        "userid" : String,
-        "car-reg-num" : String,
-        "Key" : String
-    }
-    ```
+  - POST
+  - recall_request <---리콜 신청, 접수, 이력, 완료 하나로 다 함
+    소비자 요청
+    infoId ="RCLL_000000000019416"
+    user_id = "0xe292c994516c8b35c9743b260ec2086d1a47e14d"
+    serialno = "chadeonumber_xxx"
+    request_remarks = parse.quote("현대차 리콜 요청합니다.")
+    
+    status = "request" 리콜 신청
+    status = "accept" 리콜 접수
+    status = "producer_reject" 공급자 거절
+    status = "fixing" 리콜 수행
+    status = "consumer_reject" 소비자 거절
+    status = "finish_request" 공급자 완료 처리 요청
+    status = "finish" 소비자 승인 완료
+    
+   - 실행방버 : https://recall.run.goorm.io/recall_request?infoId=RCLL_000000000019416&user_id=0xe292c994516c8b35c97
+43b260ec2086d1a47e14d&serialno=chadeonumber_xxx&request_remarks=현대차 리콜 요청합니다.&status=request'
+   -return : complete
   ```
   
   - Response : 201
