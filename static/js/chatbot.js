@@ -55,14 +55,15 @@ window.addEventListener('DOMContentLoaded', () => {
                 const f = document.getElementById('JSchatBotRecallForm');
                 f.addEventListener('click', () => {
                     chatSend("신청" + answerSelect[j].innerHTML, false, "apply");
+                    apply(answerarray[c].Link_Gubun);
                 });
                 f.removeAttribute("id");
             };
 
             // console.log([j, c]);\
-            console.log(answerSelect[j].getAttribute('eventseted'));
+            // console.log(answerSelect[j].getAttribute('eventseted'));
             if (answerSelect[j].getAttribute('eventseted') !== "true") {
-                console.log('이벤트가 감지되지 않음');
+                // console.log('이벤트가 감지되지 않음');
                 answerSelect[j].addEventListener("click", () => {
                     dooooo();
                     answerSelect[j].setAttribute('eventseted', "true");
@@ -73,8 +74,8 @@ window.addEventListener('DOMContentLoaded', () => {
         if (answerSelect.length !== 0) {
             answerSelectLength = answerSelect.length - 1;
         }
-        console.log([Number(answerSelectLength + 1), answerSelect.length]);
-        console.log("ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ");
+        // console.log([Number(answerSelectLength + 1), answerSelect.length]);
+        // console.log("ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ");
     };
 
     // 챗봇으로 텍스트를 작성하는 코드
@@ -92,9 +93,9 @@ window.addEventListener('DOMContentLoaded', () => {
     });
 
     // 사용자가 메시지를 보내는 기능
-    const chatSend = (value, isajax, Dofunction) => {
+    const chatSend = (value, isajax) => {
         // console.log([lastQuestion, value, isajax, Dofunction, lastQuestion === value && Dofunction !== "query"]);
-        if (Dofunction !== "query" && lastQuestion === value) {
+        if (lastQuestion === value) {
             alert('[일반보내기] 똑같은 질의를 여러번 할 수 없습니다!');
             return false;
         } else if (value === "") {
@@ -114,12 +115,8 @@ window.addEventListener('DOMContentLoaded', () => {
 
         lastQuestion = value;
 
-        if (Dofunction === "apply") {
-            apply();
-        }
-
         if (isajax) {
-            AJAX("GET", "http://localhost:4001/api/user/getData/" + value, null);
+            AJAX("GET", "localhost:4001/api/user/getData/" + value, null);
         }
 
         chatBotBody.innerHTML += data;
@@ -158,15 +155,17 @@ window.addEventListener('DOMContentLoaded', () => {
                 return false;
             }
 
-            const data = [{
+            const data = {
                 "user_id": "0xe292c994516c8b35c9743b260ec2086d1a47e14d",
                 "user_gubun": "소비자",
-                "serialno": l,
+                "serialno": l.value,
                 "value": v.value,
-                "status": "request",
-            }];
+                "status": "request"
+            };
 
-            AJAX("POST", "localhost:4001/api/user/apply", data);
+            // console.log(data);
+
+            AJAX("POST", "localhost:4001/api/user/apply/", data);
             close();
         });
 
@@ -220,6 +219,8 @@ window.addEventListener('DOMContentLoaded', () => {
     const AJAX = async (method, link, data) => {
         const xhttp = new XMLHttpRequest();
 
+        // console.log([method, link, data]);
+
         if (method === link || null) {
             error(1);
             return false;
@@ -227,6 +228,7 @@ window.addEventListener('DOMContentLoaded', () => {
 
         // 요청 성공시
         xhttp.onreadystatechange = () => {
+            console.log(xhttp.readyState);
             if (xhttp.readyState !== XMLHttpRequest.DONE) {
                 chatBotValue.setAttribute('disabled', ' disabled');
                 chatBotValue.setAttribute('placeholder', '응답을 기다리는 중이에요!');
@@ -238,11 +240,30 @@ window.addEventListener('DOMContentLoaded', () => {
                     botChat('cantfinddata');
                     return false;
                 }
-                botChat(responseProcess(r));
+
+                if (r.indexOf("Gubun") !== -1) {
+                    botChat(responseProcess(r));
+                    return true;
+                }
+
+                botChat(r);
+                return true;
+
             }
+
+            xhttp.addEventListener("error", () => {
+                console.error(xhttp.status);
+            });
         };
-        xhttp.open(method, link, true);
-        await xhttp.send(data);
+        xhttp.open(method, "http://" + link, true);
+
+        if (data !== null) {
+            xhttp.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+        }
+
+        await xhttp.send(JSON.stringify(data));
+
+        console.log([method, link, JSON.stringify(data)]);
     };
 
 
