@@ -60,8 +60,7 @@ window.addEventListener('DOMContentLoaded', () => {
             chatbottext = `
                 응답에 불만족 하셨다고 기록하겠습니다! 더 노력할게요!
             `
-        }
-        else {
+        } else {
             chatbottext = sendtext;
         }
 
@@ -108,8 +107,9 @@ window.addEventListener('DOMContentLoaded', () => {
     //     botChat(false, "setisFalse");
     // });
 
+
     // AJAX
-    const AJAX = (method, link, data) => {
+    const AJAX = async (method, link, data) => {
         const xhttp = new XMLHttpRequest();
 
         if (method === link || null) {
@@ -118,22 +118,24 @@ window.addEventListener('DOMContentLoaded', () => {
         }
 
         // 요청 성공시
-        xhttp.onreadystatechange = function () {
-            console.log(xhttp.readyState);
-
-            if (xhttp.readyState === 4 && xhttp.status === 200) {
+        xhttp.onreadystatechange = () => {
+            if (xhttp.readyState === XMLHttpRequest.DONE && xhttp.status === 200) {
                 r = xhttp.responseText;
-            } else {
-                // 요청 실패시 경고를 띄움
-                error();
+                botChat(false, r);
             }
         };
         xhttp.open(method, link, true);
-        xhttp.setRequestHeader('Content-type', 'application/json');
-        xhttp.send(data);
+        // xhttp.setRequestHeader('Content-type', 'application/json');
+        // xhttp.setRequestHeader('Access-Control-Allow-Origin', '*');
+        await xhttp.send(data);
+    };
 
-        console.log([r]);
-        return [r];
+    const responseProcess = (d) => {
+        let r = "";
+
+        
+
+        return r;
     };
 
     // 에러 발생시 오류를 작성하는 코드
@@ -153,5 +155,6 @@ window.addEventListener('DOMContentLoaded', () => {
     };
 
     botChat(false, "welcome");
-    botChat(true, "테스트 메시지");
+
+    AJAX("GET", "http://localhost:4001/api/user/", null);
 });
