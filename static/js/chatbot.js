@@ -123,7 +123,8 @@ window.addEventListener('DOMContentLoaded', () => {
         chatBotBody.innerHTML += data;
         chatBotValue.value = "";
     };
-
+    
+    // 만족도 폼
     const apply = (link, title) => {
         query = title;
         applyForm.innerHTML = `
@@ -151,6 +152,7 @@ window.addEventListener('DOMContentLoaded', () => {
         const close = () => {
             applyForm.removeAttribute('class');
             applyForm.innerHTML = "";
+            botChat('사용자가 작업을 취소했습니다.');
         };
 
         s.addEventListener('click', () => {
@@ -177,9 +179,8 @@ window.addEventListener('DOMContentLoaded', () => {
         });
 
         c.addEventListener('click', () => {
-            const check = confirm("정말로 입력을 종료하실건가요?");
+            const check = confirm("리콜 작성을 취소하시겠습니까?");
             if (check) {
-                close();
                 close();
             } else {
                 return false;
@@ -213,7 +214,7 @@ window.addEventListener('DOMContentLoaded', () => {
         const data = `
         <div class="botchat">
         <div class="profile">
-          <img src="//placehold.it/50x50">
+          <img src="./image/chatbot.png">
         </div>
 
         <div class="chat">
@@ -282,8 +283,7 @@ window.addEventListener('DOMContentLoaded', () => {
 
         console.log([method, link, JSON.stringify(data)]);
     };
-
-
+    
     // 데이터를 가공하는 함수
     const responseProcess = (d) => {
         // console.log(d);
