@@ -9,8 +9,6 @@ exports.getalldata = async (ctx) => {
                 uri: "https://recall.run.goorm.io/callNLPJSON?company=kisa&system=recall&classgubun=ALL&var1=" + t
             }
         );
-        let b = await r;
-        await console.log(b);
         return r;
     };
 
