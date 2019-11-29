@@ -20,6 +20,15 @@
 https://recall.run.goorm.io/callNLPJSON?company=kisa&system=recall&classgubun=ALL&var1=%ED%98%84%EB%8C%80%EC%9E%90%EB%8F%99%EC%B0%A8
 
 
+- 리콜 입력 조회 : 
+
+  - GET
+  - recall_history
+ [파라미터 정의]
+    infoId ="RCLL_000000000019416"
+    
+https://recall.run.goorm.io/recall_history?infoId=RCLL_000000000019416
+
 - 리콜 신청 / 접수 / 이력 / 완료 / 거절 : 
 
   - POST
