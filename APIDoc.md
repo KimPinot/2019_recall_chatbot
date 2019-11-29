@@ -24,9 +24,14 @@ https://recall.run.goorm.io/callNLPJSON?company=kisa&system=recall&classgubun=AL
 
   - POST
   - recall_request <---리콜 신청, 접수, 이력, 완료 하나로 다 함
-    소비자 요청
+    [파라미터 정의]
     infoId ="RCLL_000000000019416"
     user_id = "0xe292c994516c8b35c9743b260ec2086d1a47e14d"
+    
+    user_gubun = '소비자'
+    user_gubun = '공급자'
+    user_gubun = '감독기관'
+    
     serialno = "chadeonumber_xxx"
     request_remarks = parse.quote("현대차 리콜 요청합니다.")
     
