@@ -10,46 +10,75 @@ window.addEventListener('DOMContentLoaded', () => {
     // 예상 답변 설정
     const answerSelect = document.getElementsByClassName("JSchatBotAnswerSelect");
 
+    const bottomScroll = () => {
+        chatBotBody.scrollTo(0, chatBotBody.scrollHeight);
+    };
+
+    // 버튼에 자동으로 이벤트 리스너 추가
+    const addEvent = () => {
+        for (let i = 0; i < answerSelect.length; i++) {
+            answerSelect[i].addEventListener("click", () => {
+                if (answerSelect[i].innerHTML === lastQuestion) {
+                    alert('똑같은 질의를 여러번 할 수 없습니다!');
+                    return false;
+                }
+                const v =
+                    answerSelect[i].getAttribute('data-answer') + `
+                    <br>
+                    <a href="http://` + answerarray[i].Link + `" target="_blank">자세히보기</a>
+                `;
+                chatSend(answerSelect[i].innerHTML);
+                botChat(v);
+            });
+        }
+    };
+
     // 챗봇으로 텍스트를 작성하는 코드
     chatBotValue.addEventListener('keyup', () => {
         if (window.event.keyCode === 13) {
             chatSend(chatBotValue.value);
+            addEvent();
+            bottomScroll();
         }
     });
 
     // 보내기 버튼이 눌렸을때 텍스트를 보내는 코드
     chatBotSubmit.addEventListener('click', () => {
         chatSend(chatBotValue.value);
+        addEvent();
+        bottomScroll();
     });
 
     // 사용자가 메시지를 보내는 기능
     const chatSend = (value) => {
-        let chattext = value;
 
-        if (lastQuestion === chattext) {
+        if (lastQuestion === value) {
             alert('똑같은 질의를 여러번 할 수 없습니다!');
             return;
-        } else if (chattext === "") {
+        } else if (value === "") {
             alert('내용을 입력해주세요!');
             return;
         }
 
-        lastQuestion = chattext;
-
         const data = `
             <div class="userchat">
                 <span class="chat">
-                    ` + chattext + `         
+                    ` + value + `         
                 </span>
             </div>
         `;
+
+        addEvent();
+        bottomScroll();
+
+        lastQuestion = value;
+
         chatBotBody.innerHTML += data;
         chatBotValue.value = "";
     };
 
     // 챗봇이 메시지를 보내는 기능
     const botChat = (sendtext) => {
-        const chatbotidx = 1;
         let chatbottext = "";
 
         // 웰컴 메세지 출력
@@ -58,23 +87,13 @@ window.addEventListener('DOMContentLoaded', () => {
                 안녕하세요. 리콜봇입니다!
                 <br>
                 궁금하신 사항이 있으시다면, 무엇이든지 물어보세요!
-                <br>
-                응답에 만족도를 입력해주시면, 챗봇이 더 똑똑해질거에요!
             `;
-        } else if (sendtext === "setisTrue") {
-            chatbottext = `
-                응답에 만족했다고 기록하겠습니다! 감사합니다 :)
-            `
-        } else if (sendtext === "setisFalse") {
-            chatbottext = `
-                응답에 불만족 하셨다고 기록하겠습니다! 더 노력할게요!
-            `
         } else {
             chatbottext = sendtext;
         }
 
         const data = `
-        <div class="botchat" data-chatidx="` + chatbotidx + `">
+        <div class="botchat">
         <div class="profile">
           <img src="//placehold.it/50x50">
         </div>
@@ -87,6 +106,7 @@ window.addEventListener('DOMContentLoaded', () => {
     `;
         chatBotBody.innerHTML += data;
         addEvent();
+        bottomScroll();
     };
 
     // AJAX
@@ -108,17 +128,6 @@ window.addEventListener('DOMContentLoaded', () => {
         xhttp.open(method, link, true);
         await xhttp.send(data);
     };
-    
-    // 버튼에 자동으로 이벤트 리스너 추가
-    const addEvent = () => {
-        console.log(answerSelect.length);
-        for (let i = 0; i < answerSelect.length; i++) {
-            answerSelect[i].addEventListener("click", () => {
-                chatSend(answerSelect[i].innerHTML);
-                botChat(answerSelect[i].getAttribute('data-answer'));
-            });
-        }
-    };
 
     // 데이터를 가공하는 함수
     const responseProcess = (d) => {
@@ -136,7 +145,7 @@ window.addEventListener('DOMContentLoaded', () => {
                 <button class="JSchatBotAnswerSelect" data-answer="` + answerarray[i].Answer + `">
                 ` +
                 answerarray[i].Question;
-            +`
+            + `
                 </button>
             `;
         }
