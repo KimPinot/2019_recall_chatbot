@@ -1,35 +1,40 @@
+let answerarray = "";
+let lastQuestion = "";
+
 window.addEventListener('DOMContentLoaded', () => {
     const chatBotValue = document.getElementById("JSchatBotValue");
     const chatBotSubmit = document.getElementById("JSchatBotSubmit");
 
     const chatBotBody = document.getElementById("chatBody");
 
-    const chatBotSetisTrue = document.getElementsByClassName("JSchatBotSetisYes");
-    const chatBotSetisFalse = document.getElementsByClassName("JSchatBotSetisNo");
+    // 예상 답변 설정
+    const answerSelect = document.getElementsByClassName("JSchatBotAnswerSelect");
 
     // 챗봇으로 텍스트를 작성하는 코드
     chatBotValue.addEventListener('keyup', () => {
         if (window.event.keyCode === 13) {
-            chatSend();
+            chatSend(chatBotValue.value);
         }
     });
 
     // 보내기 버튼이 눌렸을때 텍스트를 보내는 코드
     chatBotSubmit.addEventListener('click', () => {
-        chatSend();
+        chatSend(chatBotValue.value);
     });
 
     // 사용자가 메시지를 보내는 기능
     const chatSend = (value) => {
-        let chattext = "";
-        if (chatBotValue.value === "") {
+        let chattext = value;
+
+        if (lastQuestion === chattext) {
+            alert('똑같은 질의를 여러번 할 수 없습니다!');
+            return;
+        } else if (chattext === "") {
             alert('내용을 입력해주세요!');
-            return false;
-        } else if (value !== "") {
-            chattext = value;
-        } else {
-            chattext = chatBotValue.value;
+            return;
         }
+
+        lastQuestion = chattext;
 
         const data = `
             <div class="userchat">
@@ -43,10 +48,9 @@ window.addEventListener('DOMContentLoaded', () => {
     };
 
     // 챗봇이 메시지를 보내는 기능
-    const botChat = (setisbool, sendtext) => {
+    const botChat = (sendtext) => {
         const chatbotidx = 1;
         let chatbottext = "";
-        let setisform = "";
 
         // 웰컴 메세지 출력
         if (sendtext === "welcome") {
@@ -69,20 +73,6 @@ window.addEventListener('DOMContentLoaded', () => {
             chatbottext = sendtext;
         }
 
-        // 값이 true 일 경우, 만족도 조사 기능 추가
-        if (setisbool === true) {
-            setisform = `
-            <ul class="chatBotSetis">
-                <li id="JSchatBotSetisYes">
-                   <i class="far fa-thumbs-up"></i>
-                </li>
-                <li id="JSchatBotSetisNo">
-                    <i class="far fa-thumbs-down"></i>
-                </li>
-            </ul>
-            `
-        }
-
         const data = `
         <div class="botchat" data-chatidx="` + chatbotidx + `">
         <div class="profile">
@@ -91,27 +81,13 @@ window.addEventListener('DOMContentLoaded', () => {
 
         <div class="chat">
           <span>` + chatbottext + `</span>
-          <div class="function">
-            <div class="fake"></div>
-            ` + setisform + `
-          </div>
         </div>
 
       </div>
     `;
         chatBotBody.innerHTML += data;
+        addEvent();
     };
-
-    // // 만족도 조사 (응답에 만족함)
-    // chatBotSetisTrue.addEventListener('click', function(){
-    //     botChat(false, "setisTrue");
-    // });
-    //
-    // // 만족도 조사 (응답에 만족하지 아니함)
-    // chatBotSetisFalse.addEventListener('click', function(){
-    //     botChat(false, "setisFalse");
-    // });
-
 
     // AJAX
     const AJAX = async (method, link, data) => {
@@ -126,37 +102,44 @@ window.addEventListener('DOMContentLoaded', () => {
         xhttp.onreadystatechange = () => {
             if (xhttp.readyState === XMLHttpRequest.DONE && xhttp.status === 200) {
                 r = xhttp.responseText;
-                botChat(true, responseProcess(r));
+                botChat(responseProcess(r));
             }
         };
         xhttp.open(method, link, true);
-        // xhttp.setRequestHeader('Content-type', 'application/json');
-        // xhttp.setRequestHeader('Access-Control-Allow-Origin', '*');
         await xhttp.send(data);
     };
     
+    // 버튼에 자동으로 이벤트 리스너 추가
+    const addEvent = () => {
+        console.log(answerSelect.length);
+        for (let i = 0; i < answerSelect.length; i++) {
+            answerSelect[i].addEventListener("click", () => {
+                chatSend(answerSelect[i].innerHTML);
+                botChat(answerSelect[i].getAttribute('data-answer'));
+            });
+        }
+    };
+
     // 데이터를 가공하는 함수
     const responseProcess = (d) => {
-        const h = JSON.parse(JSON.parse(d)[0]);
+        answerarray = JSON.parse(JSON.parse(d)[0]);
         let r = "";
-        // console.log(h[0]);
-        
+
         r += `
             테스트 메시지 입니다.
             <br />
             으악 어머니 분산처리
         `;
-        
-        for (let i = 0; i < h.length; i++) {
+
+        for (let i = 0; i < answerarray.length; i++) {
             r += `
-                <div>
+                <button class="JSchatBotAnswerSelect" data-answer="` + answerarray[i].Answer + `">
                 ` +
-                    h[i].Question;
-                + `
-                </div>
+                answerarray[i].Question;
+            +`
+                </button>
             `;
         }
-
         return r;
     };
 
@@ -172,11 +155,11 @@ window.addEventListener('DOMContentLoaded', () => {
             errorText = "[JavaScript] 콘솔의 오류 내용을 확인해주세요."
         }
 
-        botChat(false, query);
+        botChat(query);
         console.error(errorText);
     };
 
-    botChat(false, "welcome");
+    botChat("welcome");
 
     AJAX("GET", "http://localhost:4001/api/user/", null);
 });
