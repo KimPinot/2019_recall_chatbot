@@ -11,6 +11,9 @@ window.addEventListener('DOMContentLoaded', () => {
     // 예상 답변 설정
     const answerSelect = document.getElementsByClassName("JSchatBotAnswerSelect");
 
+    // 블록체인 신청 폼
+    const applyForm = document.getElementById('apply');
+
     // 채팅 입력시 하단으로 강제 스크롤
     const bottomScroll = () => {
         chatBotBody.scrollTo(0, chatBotBody.scrollHeight);
@@ -27,7 +30,7 @@ window.addEventListener('DOMContentLoaded', () => {
             let j = i;
             if (i > answerSelectLength) {
                 const t = Number(answerSelect[i].getAttribute("data-idx")) + 1;
-                j =  t + answerSelectLength;
+                j = t + answerSelectLength;
             }
             const c = answerSelect[i].getAttribute("data-idx");
 
@@ -69,7 +72,7 @@ window.addEventListener('DOMContentLoaded', () => {
     });
 
     // 사용자가 메시지를 보내는 기능
-    const chatSend = (value, isajax) => {
+    const chatSend = (value, isajax, Dofunction) => {
 
         if (lastQuestion === value) {
             alert('똑같은 질의를 여러번 할 수 없습니다!');
@@ -91,12 +94,70 @@ window.addEventListener('DOMContentLoaded', () => {
 
         lastQuestion = value;
 
+        if (Dofunction === "apply") {
+            apply();
+        }
+
         if (isajax) {
             AJAX("GET", "http://localhost:4001/api/user/getData/" + value, null);
         }
 
         chatBotBody.innerHTML += data;
         chatBotValue.value = "";
+    };
+
+    const apply = (link) => {
+        applyForm.innerHTML = `
+        <div class="container">
+            <div class="background" id="JSchatBotApplyClose"></div>
+            <div class="form">
+              <div class="center">
+                <h1>리콜 신청</h1>
+                <input type="hidden" id="JSchatBotApplyLink" value="` + link + `">
+                <textarea id="JSchatBotApplyValue" placeholder="리콜 신청 사유 입력"></textarea>
+                <button id="JSchatBotApplysSubmit">전송하기</button>
+              </div>
+            </div>
+      </div>
+    `;
+        applyForm.setAttribute('class', 'show');
+
+        const v = document.getElementById('JSchatBotApplyValue');
+        const c = document.getElementById('JSchatBotApplyClose');
+        const s = document.getElementById('JSchatBotApplysSubmit');
+        const l = document.getElementById('JSchatBotApplyLink');
+
+        const close = () => {
+            applyForm.removeAttribute('class');
+            applyForm.innerHTML = "";
+        };
+
+        s.addEventListener('click', () => {
+            if (v.value === "") {
+                alert("내용을 입력해주세요!");
+                return false;
+            }
+
+            const data = [{
+                "user_id" : "0xe292c994516c8b35c9743b260ec2086d1a47e14d",
+                "user_gubun" : "소비자",
+                "serialno" : l,
+                "value" : v.value,
+                "status" : "request",
+            }];
+
+            AJAX("POST", "localhost:4001/api/user/apply", data);
+            close();
+        });
+
+        c.addEventListener('click', () => {
+           const check = confirm("정말로 입력을 종료하실건가요?");
+           if (check) {
+                close();
+           } else {
+               return false;
+           }
+        });
     };
 
     // 챗봇이 메시지를 보내는 기능
@@ -146,7 +207,12 @@ window.addEventListener('DOMContentLoaded', () => {
 
         // 요청 성공시
         xhttp.onreadystatechange = () => {
-            if (xhttp.readyState === XMLHttpRequest.DONE && xhttp.status === 200) {
+            if (xhttp.readyState !== XMLHttpRequest.DONE) {
+                chatBotValue.setAttribute('disabled', ' disabled');
+                chatBotValue.setAttribute('placeholder', '응답을 기다리는 중이에요!');
+            } else if (xhttp.readyState === XMLHttpRequest.DONE && xhttp.status === 200) {
+                chatBotValue.removeAttribute('disabled', ' disabled');
+                chatBotValue.setAttribute('placeholder', '궁금하신 내용을 입력해주세요!');
                 r = xhttp.responseText;
                 if (r === "[\"유사도 0.3 이하 이면 미답변으로 처리합니다.\"]") {
                     botChat('cantfinddata');
@@ -159,10 +225,11 @@ window.addEventListener('DOMContentLoaded', () => {
         await xhttp.send(data);
     };
 
+
     // 데이터를 가공하는 함수
     const responseProcess = (d) => {
+        // console.log(d);
         answerarray = JSON.parse(JSON.parse(d)[0]);
-        // console.log(JSON.parse(JSON.parse(d)[0]));
         let r = "";
 
         r +=
@@ -202,4 +269,5 @@ window.addEventListener('DOMContentLoaded', () => {
     };
 
     botChat("welcome");
+    chatSend("안녕", false, "apply");
 });
