@@ -4,6 +4,9 @@ window.addEventListener('DOMContentLoaded', () => {
 
     const chatBotBody = document.getElementById("chatBody");
 
+    const chatBotSetisYes = document.getElementById("JSchatBotSetisYes");
+    const chatBotSetisNo = document.getElementById("JSchatBotSetisNo");
+
     // 챗봇으로 텍스트를 작성하는 코드
     chatBotValue.addEventListener('keyup', () => {
         if (window.event.keyCode === 13) {
@@ -29,10 +32,18 @@ window.addEventListener('DOMContentLoaded', () => {
                     ` + chatBotValue.value + `         
                 </span>
             </div>
-        `
+        `;
         chatBotBody.innerHTML += data;
         chatBotValue.value = "";
     };
+
+    chatBotSetisYes.addEventListener('click', function(){
+        botChat(false, "setisTrue");
+    });
+
+    chatBotSetisNo.addEventListener('click', function(){
+        botChat(false, "setisFalse");
+    });
 
     // 챗봇이 메시지를 보내는 기능
     const botChat = (setisbool, sendtext) => {
@@ -49,7 +60,16 @@ window.addEventListener('DOMContentLoaded', () => {
                 <br>
                 응답에 만족도를 입력해주시면, 챗봇이 더 똑똑해질거에요!
             `;
-        } else {
+        } else if (sendtext === "setisTrue") {
+            chatbottext = `
+                응답에 만족했다고 기록하겠습니다! 감사합니다 :)
+            `
+        } else if (sendtext === "setisFalse") {
+            chatbottext = `
+                응답에 불만족 하셨다고 기록하겠습니다! 더 노력할게요!
+            `
+        }
+        else {
             chatbottext = sendtext;
         }
 
@@ -130,5 +150,5 @@ window.addEventListener('DOMContentLoaded', () => {
         console.error(errorText);
     };
 
-    botChat(false, "welcome")
+    botChat(false, "welcome");
 });
