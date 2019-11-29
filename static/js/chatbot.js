@@ -118,10 +118,10 @@ window.addEventListener('DOMContentLoaded', () => {
         chatBotBody.innerHTML += data;
         chatBotValue.value = "";
     };
-    
-    // 만족도 폼
+
+// 리콜 신청 폼
     const apply = (link, title) => {
-        query = title;
+        applyTitle = title;
         applyForm.innerHTML = `
         <div class="container">
             <div class="background" id="JSchatBotApplyClose"></div>
@@ -159,12 +159,12 @@ window.addEventListener('DOMContentLoaded', () => {
             const data = {
                 "user_id": "0xe292c994516c8b35c9743b260ec2086d1a47e14d",
                 "user_gubun": encodeURI("소비자"),
-                "infoId" : encodeURI(l.value),
-                "serialno" : encodeURI(cha.value),
+                "infoId": encodeURI(l.value),
+                "serialno": encodeURI(cha.value),
                 "request_remarks": encodeURI(v.value),
                 "status": "request",
-                "score" : 0,
-                "score_remarks" : "test"
+                "score": 0,
+                "score_remarks": "test"
             };
 
             // console.log(data);
@@ -183,7 +183,7 @@ window.addEventListener('DOMContentLoaded', () => {
         });
     };
 
-    // 챗봇이 메시지를 보내는 기능
+// 챗봇이 메시지를 보내는 기능
     const botChat = (sendtext) => {
         let chatbottext = "";
 
@@ -199,10 +199,9 @@ window.addEventListener('DOMContentLoaded', () => {
                 질문하신 내용과 유사한 답을 찾지 못했어요.
             `;
         } else if (sendtext === "compelete") {
-            chatbottext = query + ` 에 대한 리콜 신청이 완료되었어요!
+            chatbottext = applyTitle + ` 에 대한 리콜 신청이 완료되었어요!
             `;
-        }
-        else {
+        } else {
             chatbottext = sendtext;
         }
 
@@ -223,12 +222,11 @@ window.addEventListener('DOMContentLoaded', () => {
         bottomScroll();
     };
 
-    // AJAX
-    const AJAX = async (method, link, data) => {
+// AJAX
+    const AJAX = async (method, link, data, useResponse) => {
         const xhttp = new XMLHttpRequest();
 
         // console.log([method, link, data]);
-
         if (method === link || null) {
             error(1);
             return false;
@@ -236,34 +234,50 @@ window.addEventListener('DOMContentLoaded', () => {
 
         // 요청 성공시
         xhttp.onreadystatechange = () => {
-            // console.log(xhttp.readyState);
+            console.log([xhttp.readyState, xhttp.status]);
             if (xhttp.readyState !== XMLHttpRequest.DONE) {
                 chatBotValue.setAttribute('disabled', ' disabled');
                 chatBotValue.setAttribute('placeholder', '응답을 기다리는 중이에요!');
             } else if (xhttp.readyState === XMLHttpRequest.DONE && xhttp.status === 200) {
                 chatBotValue.removeAttribute('disabled', ' disabled');
                 chatBotValue.setAttribute('placeholder', '궁금하신 내용을 입력해주세요!');
+
+                // 답변 처리
                 r = xhttp.responseText;
-                if (r === "[\"유사도 0.3 이하 이면 미답변으로 처리합니다.\"]") {
-                    botChat('cantfinddata');
-                    return false;
-                }
 
-                if (r === "[\"complete\"]") {
-                    botChat('compelete');
-                    return false;
-                }
-
-                if (r.indexOf("Gubun") !== -1) {
-                    botChat(responseProcess(r));
+                // infoid가 있을 시, 다른 리스트 목록으로 추출
+                if (r.indexOf("infoId") !== -1) {
+                    botChat(responseProcess(r, "infoId"));
                     return true;
                 }
 
-                botChat(r);
-                return true;
+                // infoid가 있을 시, 다른 리스트 목록으로 추출
+                else if (r.indexOf("Gubun") !== -1) {
+                    botChat(responseProcess(r, "Gubun"));
+                    return true;
+                }
 
+                // 내용을 찾을 수 없음
+                if (r === "[\"유사도 0.3 이하 이면 미답변으로 처리합니다.\"]") {
+                    botChat('cantfinddata');
+                    return true;
+                }
+
+                // 리콜 신청 완료
+                if (r === "[\"complete\"]") {
+                    botChat('compelete');
+                    return true;
+                }
+
+                if (useResponse === false) {
+                    return false;
+                }
+
+                // 아니면 HTML 쿼리로 내보냄
+                botChat(r);
             }
 
+            // 에러 발생시 status
             xhttp.addEventListener("error", () => {
                 console.error(xhttp.status);
             });
@@ -275,37 +289,58 @@ window.addEventListener('DOMContentLoaded', () => {
         }
 
         await xhttp.send(JSON.stringify(data));
-
-        console.log([method, link, JSON.stringify(data)]);
     };
-    
-    // 데이터를 가공하는 함수
-    const responseProcess = (d) => {
-        // console.log(d);
-        answerarray = JSON.parse(JSON.parse(d)[0]);
+
+// 데이터를 가공하는 함수
+    const responseProcess = (d, dataName) => {
         let r = "";
 
-        r +=
-            answerarray.length +
-            `
-            개의 결과가 있습니다.
+        if (dataName === "Gubun") {
+            answerarray = JSON.parse(JSON.parse(d)[0]);
+            // 헤더
+            r +=
+                answerarray.length + `개의 결과가 있습니다.
             <br>
             텍스트를 눌러 자세한 내용을 확인해 보세요.
         `;
 
-        for (let i = 0; i < answerarray.length; i++) {
-            r += `
+            // 반복문
+            for (let i = 0; i < answerarray.length; i++) {
+                r += `
                 <button class="JSchatBotAnswerSelect" data-answer="` + answerarray[i].Answer + `" data-idx="` + i + `">
                 ` +
-                answerarray[i].Question;
-            +`
+                    answerarray[i].Question;
+                +`
                 </button>
             `;
+            }
+            console.log(r);
+            return r;
+        } else if (dataName === "infoId") {
+            recallList = JSON.parse(JSON.parse(d)[0]);
+            // console.log(recallList);
+            // 헤더
+            r += `
+            지금까지 신청하신 리콜의 내역입니다.
+            <br>
+            제목을 눌러 자세한 진행사항을 확인해 보세요.
+        `;
+
+            // 반복문
+            for (let i = 0; i < recallList.length; i++) {
+                r += `
+                <button class="JSrecallSelect" data-idx="` + i + `">
+                ` +
+                    recallList[i].infoSj;
+                +`
+                </button>
+            `;
+            }
+            return r;
         }
-        return r;
     };
 
-    // 에러 발생시 오류를 작성하는 코드
+// 에러 발생시 오류를 작성하는 코드
     const error = (errorCode) => {
         let query, errorText;
 
@@ -322,4 +357,22 @@ window.addEventListener('DOMContentLoaded', () => {
     };
 
     botChat("welcome");
-});
+
+// 챗봇으로 텍스트를 작성하는 코드
+    chatBotValue.addEventListener('keyup', () => {
+        if (window.event.keyCode === 13) {
+            chatSend(chatBotValue.value, true);
+            bottomScroll();
+        }
+    });
+
+// 보내기 버튼이 눌렸을때 텍스트를 보내는 코드
+    chatBotSubmit.addEventListener('click', () => {
+        chatSend(chatBotValue.value, true);
+        bottomScroll();
+    });
+
+// 만약 해당 유저가 리콜을 한 전적이 있다면 recall 목록을 보여줌.
+    AJAX("GET", "localhost:4001/api/user/recallhistory/userid/" + user_id, null, false);
+})
+;
