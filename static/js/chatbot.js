@@ -1,5 +1,6 @@
 let answerarray = "";
 let lastQuestion = "";
+let answerSelectLength = 0;
 
 window.addEventListener('DOMContentLoaded', () => {
     const chatBotValue = document.getElementById("JSchatBotValue");
@@ -10,47 +11,65 @@ window.addEventListener('DOMContentLoaded', () => {
     // 예상 답변 설정
     const answerSelect = document.getElementsByClassName("JSchatBotAnswerSelect");
 
+    // 채팅 입력시 하단으로 강제 스크롤
     const bottomScroll = () => {
         chatBotBody.scrollTo(0, chatBotBody.scrollHeight);
     };
 
     // 버튼에 자동으로 이벤트 리스너 추가
     const addEvent = () => {
+
+        if (answerSelect.length === answerSelectLength) {
+            return false;
+        }
+
         for (let i = 0; i < answerSelect.length; i++) {
+            let j = i;
+            if (i > answerSelectLength) {
+                const t = Number(answerSelect[i].getAttribute("data-idx")) + 1;
+                j =  t + answerSelectLength;
+            }
+            const c = answerSelect[i].getAttribute("data-idx");
+
+            // console.log([j, c]);
             answerSelect[i].addEventListener("click", () => {
-                if (answerSelect[i].innerHTML === lastQuestion) {
+                if (answerSelect[j].innerHTML === lastQuestion) {
                     alert('똑같은 질의를 여러번 할 수 없습니다!');
                     return false;
                 }
                 const v =
-                    answerSelect[i].getAttribute('data-answer') + `
+                    answerSelect[c].getAttribute('data-answer') + `
                     <br>
-                    <a href="http://` + answerarray[i].Link + `" target="_blank">자세히보기</a>
+                    <a href="http://` + answerarray[c].Link + `" target="_blank">자세히보기</a>
                 `;
-                chatSend(answerSelect[i].innerHTML);
+                chatSend(answerSelect[j].innerHTML, false);
                 botChat(v);
             });
         }
+
+        if (answerSelect.length !== 0) {
+            answerSelectLength = answerSelect.length - 1;
+        }
+        // console.log([Number(answerSelectLength + 1), answerSelect.length]);
+        // console.log("ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ");
     };
 
     // 챗봇으로 텍스트를 작성하는 코드
     chatBotValue.addEventListener('keyup', () => {
         if (window.event.keyCode === 13) {
-            chatSend(chatBotValue.value);
-            addEvent();
+            chatSend(chatBotValue.value, true);
             bottomScroll();
         }
     });
 
     // 보내기 버튼이 눌렸을때 텍스트를 보내는 코드
     chatBotSubmit.addEventListener('click', () => {
-        chatSend(chatBotValue.value);
-        addEvent();
+        chatSend(chatBotValue.value, true);
         bottomScroll();
     });
 
     // 사용자가 메시지를 보내는 기능
-    const chatSend = (value) => {
+    const chatSend = (value, isajax) => {
 
         if (lastQuestion === value) {
             alert('똑같은 질의를 여러번 할 수 없습니다!');
@@ -68,10 +87,13 @@ window.addEventListener('DOMContentLoaded', () => {
             </div>
         `;
 
-        addEvent();
         bottomScroll();
 
         lastQuestion = value;
+
+        if (isajax) {
+            AJAX("GET", "http://localhost:4001/api/user/getData/" + value, null);
+        }
 
         chatBotBody.innerHTML += data;
         chatBotValue.value = "";
@@ -87,6 +109,10 @@ window.addEventListener('DOMContentLoaded', () => {
                 안녕하세요. 리콜봇입니다!
                 <br>
                 궁금하신 사항이 있으시다면, 무엇이든지 물어보세요!
+            `;
+        } else if (sendtext === "cantfinddata") {
+            chatbottext = `
+                질문하신 내용과 유사한 답을 찾지 못했어요 :(
             `;
         } else {
             chatbottext = sendtext;
@@ -122,6 +148,10 @@ window.addEventListener('DOMContentLoaded', () => {
         xhttp.onreadystatechange = () => {
             if (xhttp.readyState === XMLHttpRequest.DONE && xhttp.status === 200) {
                 r = xhttp.responseText;
+                if (r === "[\"유사도 0.3 이하 이면 미답변으로 처리합니다.\"]") {
+                    botChat('cantfinddata');
+                    return false;
+                }
                 botChat(responseProcess(r));
             }
         };
@@ -132,20 +162,23 @@ window.addEventListener('DOMContentLoaded', () => {
     // 데이터를 가공하는 함수
     const responseProcess = (d) => {
         answerarray = JSON.parse(JSON.parse(d)[0]);
+        // console.log(JSON.parse(JSON.parse(d)[0]));
         let r = "";
 
-        r += `
-            테스트 메시지 입니다.
-            <br />
-            으악 어머니 분산처리
+        r +=
+            answerarray.length +
+            `
+            개의 결과가 있습니다.
+            <br>
+            텍스트를 눌러 자세한 내용을 확인해 보세요.
         `;
 
         for (let i = 0; i < answerarray.length; i++) {
             r += `
-                <button class="JSchatBotAnswerSelect" data-answer="` + answerarray[i].Answer + `">
+                <button class="JSchatBotAnswerSelect" data-answer="` + answerarray[i].Answer + `" data-idx="` + i + `">
                 ` +
                 answerarray[i].Question;
-            + `
+            +`
                 </button>
             `;
         }
@@ -169,6 +202,4 @@ window.addEventListener('DOMContentLoaded', () => {
     };
 
     botChat("welcome");
-
-    AJAX("GET", "http://localhost:4001/api/user/", null);
 });
