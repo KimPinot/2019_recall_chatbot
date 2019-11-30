@@ -12,7 +12,7 @@
     "Link_Gubun": "RCLL_000000000019505", 
     "Link": "www.consumer.go.kr/user/ftc/consumer/recallInfo/629/selectRecallInfoInternalDetail.do?recallSn=RCLL_000000000019505",
     "Question_Nouns": "자동차 현대 자동차 주 현대 I 계기판 관련 리콜",
-    "Use_Yn": b
+    "Use_Yn": "b",
     "AVG_Cnt": 0.7460528308511207,
     "Cnt": 0.7844645405527361,
     "Cnt2": 0.7076411211495055
