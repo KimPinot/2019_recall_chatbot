@@ -1,6 +1,6 @@
 /*body*/
 body {
-	background-image:url(images/bg_2.jpg);
+	background-image:url(old/images/bg_2.jpg);
 	-webkit-background-size: cover;
 	-moz-background-size: cover;
 	background-size: cover;
@@ -197,7 +197,7 @@ img{
 }
 /*icon*/
 .social-icon{
-	background-image:url('images/social.png');
+	background-image:url('old/images/social.png');
 	background-repeat: no-repeat;
 	background-color: transparent;
 	width:23px;
